@@ -64,6 +64,8 @@ def main() :
   ##
   ptr = r'ج' + '.+'
   msk = df[btic].str.fullmatch(ptr)
-  df1 = df[msk]  ##
+  df1 = df[msk]
+
+  ##
 
 ##
