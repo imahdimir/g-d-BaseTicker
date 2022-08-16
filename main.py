@@ -13,7 +13,7 @@ from mirutil.funcs import save_as_prq_wo_index as sprq
 
 
 btic = 'BaseTicker'
-repo_name = 'imahdimir/d-Unique-BaseTickers-TSETMC'
+repo_path = 'imahdimir/d-Unique-BaseTickers-TSETMC'
 
 def main() :
 
@@ -21,10 +21,10 @@ def main() :
   pass
 
   ##
-  btick = GithubData(repo_name)
+  btick = GithubData(repo_path)
   btick.clone_overwrite_last_version()
   ##
-  fpn = btick.data_fp
+  fpn = btick.data_fps[0]
   ##
   df = pd.read_parquet(fpn)
   ##
