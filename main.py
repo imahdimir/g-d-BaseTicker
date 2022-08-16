@@ -39,6 +39,36 @@ def main() :
   btick.commit_and_push_to_github_data_target('test - just sort with gov py')
   ##
   btick.rmdir()
+
+  ##
+
+
+  ##
+
+##
+
+
+# noinspection PyUnreachableCode
+if False :
+
+  pass
+
+  ##
+  from mirutil.funcs import save_df_as_a_nice_xl as sxl
+
+
+  ##
+  sxl(df , 'd.xlsx')
+
+  ##
+
+##
+
+# noinspection PyUnreachableCode
+if False :
+
+  pass
+
   ##
 
 
