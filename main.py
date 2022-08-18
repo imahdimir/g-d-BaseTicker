@@ -37,9 +37,9 @@ def main() :
   ##
   df = df.set_index(btic)
   ##
-  sprq(df , fpn)
+  df.to_parquet(fpn)
   ##
-  btick.commit_and_push_to_github_data_target('now BaseTicker is index column')
+  btick.commit_and_push_to_github_data_target('BaseTicker set as the index column')
   ##
   btick.rmdir()
 
