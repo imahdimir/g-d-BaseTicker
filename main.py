@@ -11,12 +11,11 @@ from githubdata import GithubData
 from mirutil.funcs import norm_fa_str as norm
 from mirutil.funcs import save_as_prq_wo_index as sprq
 
-
-btic = 'BaseTicker'
 repo_path = 'imahdimir/d-Unique-BaseTickers-TSETMC'
 
-def main() :
+btic = 'BaseTicker'
 
+def main() :
 
   pass
 
@@ -28,15 +27,19 @@ def main() :
   ##
   df = pd.read_parquet(fpn)
   ##
+  df = df.reset_index(drop = False)
+  ##
   df = df.applymap(norm)
   ##
   df = df.drop_duplicates()
   ##
   df = df.sort_values(btic)
   ##
+  df = df.set_index(btic)
+  ##
   sprq(df , fpn)
   ##
-  btick.commit_and_push_to_github_data_target('test - just sort with gov py')
+  btick.commit_and_push_to_github_data_target('now BaseTicker is index column')
   ##
   btick.rmdir()
 
