@@ -9,7 +9,7 @@
 import pandas as pd
 from githubdata import GithubData
 from mirutil.funcs import norm_fa_str as norm
-from mirutil.funcs import save_as_prq_wo_index as sprq
+
 
 repo_path = 'imahdimir/d-Unique-BaseTickers-TSETMC'
 
@@ -29,6 +29,8 @@ def main() :
   ##
   df = df.reset_index(drop = False)
   ##
+  df = df[[btic]]
+  ##
   df = df.applymap(norm)
   ##
   df = df.drop_duplicates()
@@ -39,7 +41,8 @@ def main() :
   ##
   df.to_parquet(fpn)
   ##
-  btick.commit_and_push_to_github_data_target('BaseTicker set as the index column')
+  commit_msg = 'gov'
+  btick.commit_and_push_to_github_data_target(commit_msg)
   ##
   btick.rmdir()
 
@@ -52,16 +55,82 @@ def main() :
 
 
 # noinspection PyUnreachableCode
-if False :
+def add_from_ifb_ipo_data() :
 
   pass
 
   ##
-  from mirutil.funcs import save_df_as_a_nice_xl as sxl
+  ifb_ipo_repo_url = 'https://github.com/imahdimir/raw-d-IFB-IPOs'
+
+  ##
+  ifb_ipo_repo = GithubData(ifb_ipo_repo_url)
+  ifb_ipo_repo.clone_overwrite_last_version()
+  ##
+  ifb_fpn = ifb_ipo_repo.dir / 'IFB-IPOs.xlsx'
+  df0 = pd.read_excel(ifb_fpn)
+  ##
+  df0 = df0[['نام نماد']]
+  df0['bt'] = df0['نام نماد']
+  ##
+  df0['bt'] = df0['bt'].apply(norm)
+  ##
+  df0['-1'] = df0['bt'].str[-1]
+  ##
+  df0['bt'] = df0['bt'].str[:-1]
+  ##
+  ptr = '\D+'
+  df0['NotHasNum'] = df0['bt'].str.fullmatch(ptr)
+  ##
+  df1 = df0[~ df0['NotHasNum']]
+  for _ , row in df1.iterrows() :
+    print('"' + row['bt'] + '":"' + row['bt'][:-1] + '",')
+
+  ##
+  dct_man = {
+      "پترول1"  : "پترول" ,
+      "وخاور1"  : "وخاور" ,
+      "کنور1"   : "کنور" ,
+      "ثشرق1"   : "ثشرق" ,
+      "شپدیس1"  : "شپدیس" ,
+      "همراه1"  : "همراه" ,
+      "وایران1" : "وایران" ,
+      "پکویر1"  : "پکویر" ,
+      }
+
+  ##
+  df0.loc[df0['NotHasNum'] , btic] = df0['bt']
+  ##
+  msk = ~ df0['NotHasNum']
+  msk &= df0['bt'].isin(dct_man.keys())
+
+  df0.loc[msk , btic] = df0['bt'].str[:-1]
+  ##
+  df1 = df0[[btic]]
+  ##
+  btick = GithubData(repo_path)
+  btick.clone_overwrite_last_version()
+  ##
+  fpn = btick.data_fps[0]
+  ##
+  df = pd.read_parquet(fpn)
+  ##
+  df = df.reset_index()
+  ##
+  df = pd.concat([df , df1])
+  ##
+  df = df.drop_duplicates()
+  ##
+  df.to_parquet(fpn)
+  ##
+  commit_msg = 'added 4 BaseTickers from IFB IPOs data'
+  btick.commit_and_push_to_github_data_target(commit_msg)
+  ##
+  btick.rmdir()
+  ifb_ipo_repo.rmdir()
 
 
   ##
-  sxl(df , 'd.xlsx')
+
 
   ##
 
