@@ -11,9 +11,10 @@ from githubdata import GithubData
 from mirutil.funcs import norm_fa_str as norm
 
 
-repo_path = 'imahdimir/d-Unique-BaseTickers-TSETMC'
+repo_path = 'https://github.com/imahdimir/d-Unique-BaseTickers-TSETMC'
 
 btic = 'BaseTicker'
+cname = 'CompanyName'
 
 def main() :
 
@@ -29,11 +30,9 @@ def main() :
   ##
   df = df.reset_index(drop = False)
   ##
-  df = df[[btic]]
+  df = df[[btic , cname]]
   ##
-  df = df.applymap(norm)
-  ##
-  df = df.drop_duplicates()
+  df[btic] = df[btic].apply(norm)
   ##
   df = df.sort_values(btic)
   ##
