@@ -12,7 +12,7 @@ from mirutil.funcs import norm_fa_str as norm
 from mirutil.funcs import save_df_as_a_nice_xl as sxl
 
 
-repo_path = 'https://github.com/imahdimir/d-uniq-BaseTickers'
+bticks_repo_url = 'https://github.com/imahdimir/d-uniq-BaseTickers'
 cur_module_repo = 'https://github.com/imahdimir/gov-d-uniq-BaseTickers'
 
 btic = 'BaseTicker'
@@ -22,11 +22,11 @@ def main() :
   pass
 
   ##
-  btick_repo = GithubDataRepo(repo_path)
-  btick_repo.clone_overwrite_last_version()
+  bticks_repo = GithubDataRepo(bticks_repo_url)
+  bticks_repo.clone_overwrite_last_version()
   ##
   data_suffix = '.xlsx'
-  fpns = btick_repo.return_sorted_list_of_fpns_with_the_suffix(data_suffix)
+  fpns = bticks_repo.return_sorted_list_of_fpns_with_the_suffix(data_suffix)
   fpn = fpns[0]
   ##
   df = pd.read_excel(fpn)
@@ -39,13 +39,13 @@ def main() :
   ##
   df = df.drop_duplicates()
   ##
-  sxl(df , btick_repo.local_path / 'data.xlsx')
+  sxl(df , fpn)
   ##
   commit_msg = 'date changed to .xlsx format'
   commit_msg += f' by repo: {cur_module_repo}'
-  btick_repo.commit_and_push_to_github_data_target(commit_msg)
+  bticks_repo.commit_and_push_to_github_data_target(commit_msg)
   ##
-  btick_repo.rmdir()
+  bticks_repo.rmdir()
 
   ##
 
