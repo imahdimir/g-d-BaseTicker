@@ -12,38 +12,37 @@ from mirutil.funcs import norm_fa_str as norm
 
 
 repo_path = 'https://github.com/imahdimir/d-uniq-BaseTickers'
+cur_module_repo = 'https://github.com/imahdimir/gov-d-uniq-BaseTickers'
 
 btic = 'BaseTicker'
-cname = 'CompanyName'
 
 def main() :
 
   pass
 
   ##
-  btick = GithubData(repo_path)
-  btick.clone_overwrite_last_version()
+  btick_repo = GithubData(repo_path)
+  btick_repo.clone_overwrite_last_version()
   ##
-  fpn = btick.data_fps[0]
-  ##
+  fpn = btick_repo.data_fps[0]
   df = pd.read_parquet(fpn)
-  ##
   df = df.reset_index(drop = False)
   ##
-  df = df[[btic , cname]]
+  df = df[[btic]]
   ##
   df[btic] = df[btic].apply(norm)
   ##
   df = df.sort_values(btic)
   ##
-  df = df.set_index(btic)
+  df = df.drop_duplicates()
   ##
   df.to_parquet(fpn)
   ##
-  commit_msg = 'gov'
-  btick.commit_and_push_to_github_data_target(commit_msg)
+  commit_msg = 'BaseTicker is an ordinary column now not an index one'
+  commit_msg += f' by repo: {cur_module_repo}'
+  btick_repo.commit_and_push_to_github_data_target(commit_msg)
   ##
-  btick.rmdir()
+  btick_repo.rmdir()
 
   ##
 
@@ -153,5 +152,3 @@ if False :
   df1 = df[msk]
 
   ##
-
-##
