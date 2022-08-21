@@ -7,8 +7,9 @@
 ##
 
 import pandas as pd
-from githubdata import GithubData
+from githubdata import GithubDataRepo
 from mirutil.funcs import norm_fa_str as norm
+from mirutil.funcs import save_df_as_a_nice_xl as sxl
 
 
 repo_path = 'https://github.com/imahdimir/d-uniq-BaseTickers'
@@ -21,12 +22,14 @@ def main() :
   pass
 
   ##
-  btick_repo = GithubData(repo_path)
+  btick_repo = GithubDataRepo(repo_path)
   btick_repo.clone_overwrite_last_version()
   ##
-  fpn = btick_repo.data_fps[0]
-  df = pd.read_parquet(fpn)
-  df = df.reset_index(drop = False)
+  data_suffix = '.xlsx'
+  fpns = btick_repo.return_sorted_list_of_fpns_with_the_suffix(data_suffix)
+  fpn = fpns[0]
+  ##
+  df = pd.read_excel(fpn)
   ##
   df = df[[btic]]
   ##
@@ -36,9 +39,9 @@ def main() :
   ##
   df = df.drop_duplicates()
   ##
-  df.to_parquet(fpn)
+  sxl(df , btick_repo.local_path / 'data.xlsx')
   ##
-  commit_msg = 'BaseTicker is an ordinary column now not an index one'
+  commit_msg = 'date changed to .xlsx format'
   commit_msg += f' by repo: {cur_module_repo}'
   btick_repo.commit_and_push_to_github_data_target(commit_msg)
   ##
@@ -47,85 +50,12 @@ def main() :
   ##
 
 ##
-# noinspection PyUnreachableCode
-def add_from_ifb_ipo_data() :
-  pass
-  ##
-  ifb_ipo_repo_url = 'https://github.com/imahdimir/raw-d-IFB-IPOs'
 
-  ##
-  ifb_ipo_repo = GithubData(ifb_ipo_repo_url)
-  ifb_ipo_repo.clone_overwrite_last_version()
-  ##
-  ifb_fpn = ifb_ipo_repo.dir / 'IFB-IPOs.xlsx'
-  df0 = pd.read_excel(ifb_fpn)
-  ##
-  df0 = df0[['نام نماد']]
-  df0['bt'] = df0['نام نماد']
-  ##
-  df0['bt'] = df0['bt'].apply(norm)
-  ##
-  df0['-1'] = df0['bt'].str[-1]
-  ##
-  df0['bt'] = df0['bt'].str[:-1]
-  ##
-  ptr = '\D+'
-  df0['NotHasNum'] = df0['bt'].str.fullmatch(ptr)
-  ##
-  df1 = df0[~ df0['NotHasNum']]
-  for _ , row in df1.iterrows() :
-    print('"' + row['bt'] + '":"' + row['bt'][:-1] + '",')
-
-  ##
-  dct_man = {
-      "پترول1"  : "پترول" ,
-      "وخاور1"  : "وخاور" ,
-      "کنور1"   : "کنور" ,
-      "ثشرق1"   : "ثشرق" ,
-      "شپدیس1"  : "شپدیس" ,
-      "همراه1"  : "همراه" ,
-      "وایران1" : "وایران" ,
-      "پکویر1"  : "پکویر" ,
-      }
-
-  ##
-  df0.loc[df0['NotHasNum'] , btic] = df0['bt']
-  ##
-  msk = ~ df0['NotHasNum']
-  msk &= df0['bt'].isin(dct_man.keys())
-
-  df0.loc[msk , btic] = df0['bt'].str[:-1]
-  ##
-  df1 = df0[[btic]]
-  ##
-  btick = GithubData(repo_path)
-  btick.clone_overwrite_last_version()
-  ##
-  fpn = btick.data_fps[0]
-  ##
-  df = pd.read_parquet(fpn)
-  ##
-  df = df.reset_index()
-  ##
-  df = pd.concat([df , df1])
-  ##
-  df = df.drop_duplicates()
-  ##
-  df.to_parquet(fpn)
-  ##
-  commit_msg = 'added 4 BaseTickers from IFB IPOs data'
-  btick.commit_and_push_to_github_data_target(commit_msg)
-  ##
-  btick.rmdir()
-  ifb_ipo_repo.rmdir()
-
-  ##
-
-##
 
 # noinspection PyUnreachableCode
 if False :
   pass
+
   ##
   ptr = '\D+'
   msk = ~ df[btic].str.fullmatch(ptr)
