@@ -1,8 +1,0 @@
-[project]
-authors = [{ name = "Mahdi Mir", email = "imahdimir@gmail.com" }]
-readme = "README.md"
-license = { file = "LICENSE" }
-dependencies = [
-    "mirutil ~= 20220813",
-    "githubdata ~= 20220816.1"
-]

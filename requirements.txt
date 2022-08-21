@@ -1,0 +1,3 @@
+pandas~=1.4.3
+githubdata~=20220817
+mirutil~=20220817.1

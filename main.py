@@ -11,7 +11,7 @@ from githubdata import GithubData
 from mirutil.funcs import norm_fa_str as norm
 
 
-repo_path = 'https://github.com/imahdimir/d-Unique-BaseTickers-TSETMC'
+repo_path = 'https://github.com/imahdimir/d-uniq-BaseTickers'
 
 btic = 'BaseTicker'
 cname = 'CompanyName'
@@ -47,17 +47,10 @@ def main() :
 
   ##
 
-
-  ##
-
 ##
-
-
 # noinspection PyUnreachableCode
 def add_from_ifb_ipo_data() :
-
   pass
-
   ##
   ifb_ipo_repo_url = 'https://github.com/imahdimir/raw-d-IFB-IPOs'
 
@@ -127,22 +120,14 @@ def add_from_ifb_ipo_data() :
   btick.rmdir()
   ifb_ipo_repo.rmdir()
 
-
-  ##
-
-
   ##
 
 ##
 
 # noinspection PyUnreachableCode
 if False :
-
   pass
-
   ##
-
-
   ptr = '\D+'
   msk = ~ df[btic].str.fullmatch(ptr)
   df1 = df[msk]
