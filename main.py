@@ -6,7 +6,6 @@
 
 ##
 
-import pandas as pd
 from githubdata import GithubData
 from mirutil.funcs import norm_fa_str as norm
 from mirutil.funcs import save_df_as_a_nice_xl as sxl
