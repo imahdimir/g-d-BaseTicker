@@ -7,9 +7,10 @@
 ##
 
 import pandas as pd
-from githubdata import GithubDataRepo
+from githubdata import GithubData
 from mirutil.funcs import norm_fa_str as norm
 from mirutil.funcs import save_df_as_a_nice_xl as sxl
+from mirutil.funcs import read_data_according_to_type as rdata
 
 
 bticks_repo_url = 'https://github.com/imahdimir/d-uniq-BaseTickers'
@@ -19,17 +20,16 @@ btic = 'BaseTicker'
 
 def main() :
 
+
   pass
 
   ##
-  bticks_repo = GithubDataRepo(bticks_repo_url)
-  bticks_repo.clone_overwrite_last_version()
+  bticks_repo = GithubData(bticks_repo_url)
+  bticks_repo.clone()
   ##
-  data_suffix = '.xlsx'
-  fpns = bticks_repo.return_sorted_list_of_fpns_with_the_suffix(data_suffix)
-  fpn = fpns[0]
+  fpn = bticks_repo.data_filepath
   ##
-  df = pd.read_excel(fpn)
+  df = rdata(fpn)
   ##
   df = df[[btic]]
   ##
@@ -43,7 +43,8 @@ def main() :
   ##
   commit_msg = 'date changed to .xlsx format'
   commit_msg += f' by repo: {cur_module_repo}'
-  bticks_repo.commit_and_push_to_github_data_target(commit_msg)
+
+  bticks_repo.commit_push(commit_msg)
   ##
   bticks_repo.rmdir()
 
