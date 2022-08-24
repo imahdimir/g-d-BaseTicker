@@ -8,18 +8,28 @@
 import pandas as pd
 from githubdata import GithubData
 from mirutil.funcs import save_df_as_a_nice_xl as sxl
+from mirutil.funcs import search_tsetmc
 
 
 bticks_repo_url = 'https://github.com/imahdimir/d-uniq-BaseTickers'
 cur_module_repo = 'https://github.com/imahdimir/gov-d-uniq-BaseTickers'
 
 btic = 'BaseTicker'
+tick = 'Ticker'
+
+listed = 'listed'
+
+def is_base_ticker_on_tsetmc(basetick) :
+  df = search_tsetmc(basetick)
+  df[tick] = df[tick].str.strip()
+  return df[tick].eq(basetick).any()
 
 def main() :
-
   pass
 
   ##
+
+
   bticks_repo = GithubData(bticks_repo_url)
   bticks_repo.clone()
   ##
@@ -30,9 +40,29 @@ def main() :
   df = df.reset_index()
   df = df[[btic]]
   ##
+  df[btic] = df[btic].str.strip()
+  ##
   df = df.sort_values(btic)
   ##
   df = df.drop_duplicates()
+  ##
+  ldf = pd.read_excel('listed.xlsx')
+  ##
+  df = df.merge(ldf, how = 'left')
+  ##
+  msk = df[listed].isna()
+  len(msk[msk])
+  ##
+  df.loc[msk , listed] = df.loc[msk , btic].apply(is_base_ticker_on_tsetmc)
+  ##
+  msk = df[listed].ne(True)
+  df.loc[msk , listed] = df.loc[msk , btic].apply(is_base_ticker_on_tsetmc)
+  ##
+  assert df[listed].all()
+
+  ##
+  df = df[[btic]]
+
   ##
   ptr = '\D+'
   msk = ~ df[btic].str.fullmatch(ptr)
@@ -132,7 +162,7 @@ def main() :
   ok_bts_5 = {
       }
 
-  msk = ~ df1[btic].isin(ok_bts_4)
+  msk = ~ df1[btic].isin(ok_bts_5)
   len(msk[msk])
   ##
   assert len(msk[msk]) == 0
