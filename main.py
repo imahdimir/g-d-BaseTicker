@@ -3,9 +3,9 @@
 """
 
   """
-
 ##
 
+import pandas as pd
 from githubdata import GithubData
 from mirutil.funcs import norm_fa_str as norm
 from mirutil.funcs import save_df_as_a_nice_xl as sxl
@@ -30,6 +30,7 @@ def main() :
   ##
   df = rdata(fpn)
   ##
+  df = df.reset_index()
   df = df[[btic]]
   ##
   df[btic] = df[btic].apply(norm)
@@ -40,7 +41,7 @@ def main() :
   ##
   sxl(df , fpn)
   ##
-  commit_msg = 'date changed to .xlsx format'
+  commit_msg = 'applied'
   commit_msg += f' by repo: {cur_module_repo}'
 
   bticks_repo.commit_push(commit_msg)
@@ -82,3 +83,6 @@ if False :
   df1 = df[msk]
 
   ##
+
+
+##
