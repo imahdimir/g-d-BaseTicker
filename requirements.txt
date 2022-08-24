@@ -1,3 +1,4 @@
 pandas~=1.4.3
-githubdata~=2
-mirutil~=2
+githubdata~=2.6
+openpyxl~=3.0.10
+mirutil~=2.4

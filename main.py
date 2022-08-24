@@ -5,9 +5,9 @@
   """
 ##
 
+import pandas as pd
 from githubdata import GithubData
 from mirutil.funcs import save_df_as_a_nice_xl as sxl
-from mirutil.funcs import read_data_according_to_type as rdata
 
 
 bticks_repo_url = 'https://github.com/imahdimir/d-uniq-BaseTickers'
@@ -25,7 +25,7 @@ def main() :
   ##
   fpn = bticks_repo.data_filepath
   ##
-  df = rdata(fpn)
+  df = pd.read_excel(fpn)
   ##
   df = df.reset_index()
   df = df[[btic]]
@@ -34,9 +34,113 @@ def main() :
   ##
   df = df.drop_duplicates()
   ##
+  ptr = '\D+'
+  msk = ~ df[btic].str.fullmatch(ptr)
+  df1 = df[msk]
+  ##
+  for el in df1[btic] :
+    print('"' + el + '":None,')
+  ##
+  ok_bts_0 = {
+      "آتي1"   : None ,
+      "انرژي1" : None ,
+      "انرژي2" : None ,
+      "انرژي3" : None ,
+      "بورس3"  : None ,
+      "كالا1"  : None ,
+      "كالا2"  : None ,
+      "كالا3"  : None ,
+      "كالا4"  : None ,
+      }
+
+  msk = ~ df1[btic].isin(ok_bts_0)
+  len(msk[msk])
+  ##
+  assert len(msk[msk]) == 0
+
+  ##
+  ptr = '\D+'
+  msk = ~ df[btic].str.fullmatch(ptr)
+  msk &= df[btic].str[:-1].isin(df[btic])
+
+  df1 = df[msk]
+  ##
+  ok_bts_1 = {
+      "بورس3" : None ,
+      "كالا1" : None ,
+      "كالا2" : None ,
+      "كالا3" : None ,
+      "كالا4" : None ,
+      }
+
+  msk = ~ df1[btic].isin(ok_bts_1)
+  len(msk[msk])
+  ##
+  assert len(msk[msk]) == 0
+
+  ##
+  ptr = r'.+' + r'ح'
+  msk = df[btic].str.fullmatch(ptr)
+  df1 = df[msk]
+
+  ##
+  ok_bts_2 = {
+      "مفتاح" : None ,
+      }
+
+  msk = ~ df1[btic].isin(ok_bts_2)
+  len(msk[msk])
+  ##
+  assert len(msk[msk]) == 0
+
+  ##
+  ptr = r'ض' + '.+'
+  msk = df[btic].str.fullmatch(ptr)
+  df1 = df[msk]
+  ##
+  ok_bts_3 = {
+      }
+
+  msk = ~ df1[btic].isin(ok_bts_3)
+  len(msk[msk])
+  ##
+  assert len(msk[msk]) == 0
+
+  ##
+  ptr = r'ج' + '.+'
+  msk = df[btic].str.fullmatch(ptr)
+  df1 = df[msk]
+  ##
+  ok_bts_4 = {
+      "جم"          : None ,
+      "جم پيلن"     : None ,
+      "جنگل شفارود" : None ,
+      "جهرم"        : None ,
+      "جوين"        : None ,
+      }
+
+  msk = ~ df1[btic].isin(ok_bts_4)
+  len(msk[msk])
+  ##
+  assert len(msk[msk]) == 0
+
+  ##
+  st = 'پذیره'
+  msk = df[btic].str.contains(st)
+  df1 = df[msk]
+  ##
+  ok_bts_5 = {
+      }
+
+  msk = ~ df1[btic].isin(ok_bts_4)
+  len(msk[msk])
+  ##
+  assert len(msk[msk]) == 0
+
+  ##
   sxl(df , fpn)
   ##
-  commit_msg = 'got applied'
+  commit_msg = ''
   commit_msg += f' by repo: {cur_module_repo}'
 
   bticks_repo.commit_push(commit_msg)
@@ -44,44 +148,5 @@ def main() :
   bticks_repo.rmdir()
 
   ##
-
-##
-
-
-# noinspection PyUnreachableCode
-if False :
-  pass
-
-  ##
-  ptr = '\D+'
-  msk = ~ df[btic].str.fullmatch(ptr)
-  df1 = df[msk]
-  ##
-  ptr = '\D+'
-  msk = ~ df[btic].str.fullmatch(ptr)
-  msk &= df[btic].str[:-1].isin(df[btic])
-
-  df1 = df[msk]
-  # sxl(df1, 'df1.xlsx')
-  # df = df[~ msk]
-  ##
-  ptr = r'.+' + r'ح'
-  msk = df[btic].str.fullmatch(ptr)
-  df1 = df[msk]
-  ##
-  ptr = r'ض' + '.+'
-  msk = df[btic].str.fullmatch(ptr)
-  df1 = df[msk]
-  ##
-  ptr = r'ج' + '.+'
-  msk = df[btic].str.fullmatch(ptr)
-  df1 = df[msk]
-  ##
-  st = 'پذیره'
-  msk = df[btic].str.contains(st)
-  df1 = df[msk]
-
-  ##
-
 
 ##
