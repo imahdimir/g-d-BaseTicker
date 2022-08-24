@@ -5,9 +5,7 @@
   """
 ##
 
-import pandas as pd
 from githubdata import GithubData
-from mirutil.funcs import norm_fa_str as norm
 from mirutil.funcs import save_df_as_a_nice_xl as sxl
 from mirutil.funcs import read_data_according_to_type as rdata
 
@@ -18,7 +16,6 @@ cur_module_repo = 'https://github.com/imahdimir/gov-d-uniq-BaseTickers'
 btic = 'BaseTicker'
 
 def main() :
-
 
   pass
 
@@ -33,15 +30,13 @@ def main() :
   df = df.reset_index()
   df = df[[btic]]
   ##
-  df[btic] = df[btic].apply(norm)
-  ##
   df = df.sort_values(btic)
   ##
   df = df.drop_duplicates()
   ##
   sxl(df , fpn)
   ##
-  commit_msg = 'applied'
+  commit_msg = 'got applied'
   commit_msg += f' by repo: {cur_module_repo}'
 
   bticks_repo.commit_push(commit_msg)
@@ -80,6 +75,10 @@ if False :
   ##
   ptr = r'ج' + '.+'
   msk = df[btic].str.fullmatch(ptr)
+  df1 = df[msk]
+  ##
+  st = 'پذیره'
+  msk = df[btic].str.contains(st)
   df1 = df[msk]
 
   ##
