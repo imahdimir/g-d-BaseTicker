@@ -66,6 +66,12 @@ def main() :
   assert df[listed].all()
 
   ##
+  ldf = df.copy()
+  ldf = ldf[[btic, listed]]
+
+  ldf.to_excel('listed.xlsx', index = False)
+
+  ##
   df = df[[btic]]
 
   ##
@@ -206,5 +212,12 @@ def main() :
 
 
 ##
+  ldf = pd.concat([ldf , df])
+
+  ##
+  ldf[listed] = True
+
+  ##
+  ldf.to_excel('listed.xlsx')
 
 ##
