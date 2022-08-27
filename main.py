@@ -212,12 +212,5 @@ def main() :
 
 
 ##
-  ldf = pd.concat([ldf , df])
-
-  ##
-  ldf[listed] = True
-
-  ##
-  ldf.to_excel('listed.xlsx')
 
 ##
